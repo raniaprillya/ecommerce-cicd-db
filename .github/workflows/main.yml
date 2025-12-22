@@ -1,7 +1,6 @@
 name: CI Pipeline (Test API)
 
-# Kapan robot ini bekerja?
-# Setiap kali ada 'push' ke branch 'main'
+# Robot ini bekerja setiap kali ada 'push' ke branch 'main'
 on:
   push:
     branches: [ "main" ]
@@ -10,7 +9,7 @@ on:
 
 jobs:
   build-and-test:
-    # Jalanin di komputer virtual Ubuntu (disediakan GitHub Gratis)
+    # Jalanin di komputer virtual Ubuntu 
     runs-on: ubuntu-latest
 
     steps:
@@ -29,7 +28,7 @@ jobs:
         python -m pip install --upgrade pip
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-    # 4. Jalanin Test (Moment of Truth)
+    # 4. Jalanin Test 
     - name: Test with pytest
       run: |
-        pytest
+        python -m pytest
