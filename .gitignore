@@ -1,0 +1,5 @@
+venv_retcomm/
+__pycache__/
+*.pyc
+.DS_Store
+.env
