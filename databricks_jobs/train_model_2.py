@@ -1,12 +1,10 @@
-# Ini dijalankan di Databricks Notebook
 import json
 from pyspark.sql import SparkSession
 
-# 1. Start Spark (Di Databricks Community ini otomatis, tapi kita tulis aja)
+# 1. Start Spark 
 spark = SparkSession.builder.appName("RetailRecommender").getOrCreate()
 
-# 2. Simulasi: Membuat DataFrame Data Transaksi (Ceritanya ini data Jutaan Baris)
-# Di project asli, ini: spark.read.csv("/FileStore/tables/transaksi.csv")
+# 2. Dummy : Transaction data
 data = [
     ("INV001", "KOPI"), ("INV001", "GULA"), ("INV001", "SUSU"),
     ("INV002", "SEPATU"), ("INV002", "KAOS_KAKI"),
@@ -19,16 +17,13 @@ df = spark.createDataFrame(data, columns)
 
 print("✅ Data Loaded. Total rows:", df.count())
 
-# 3. Logic Data Engineering: Mencari Pasangan Barang
-# Kita cari: Barang A sering dibeli bareng apa aja?
+# 3. Logic Data Engineering: Searching products by Grouping by invoice
 from pyspark.sql.functions import collect_list, col
 
-# Group by Invoice (Satu keranjang isinya apa aja)
 basket = df.groupBy("InvoiceNo").agg(collect_list("StockCode").alias("items"))
 
-# (Logic Sederhana untuk Demo)
-# Kita bikin dictionary rekomendasi manual dari pola di atas
-# Di real case: Pakai FPGrowth Algorithm (MLlib)
+# (Logic for Demo Purpose)
+# Manual dictionary recommendation
 rules = {
     "KOPI": ["GULA", "SUSU", "ROTI"],
     "SEPATU": ["KAOS_KAKI", "TALI_SEPATU"],
@@ -38,14 +33,11 @@ rules = {
 
 print("✅ Model Trained. Rules generated.")
 
-# 4. Simpan Hasil ke Folder App (Menimpa file dummy yg lama)
-# Path di Databricks Repos agak unik, kita pakai relative path
+# 4. Save to json
 import os
 
-# Lokasi file json tujuan (di folder app/)
 output_path = "../app/recommender.json" 
 
-# Tulis file JSON
 with open(output_path, "w") as f:
     json.dump(rules, f)
     

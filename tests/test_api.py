@@ -1,10 +1,10 @@
 from fastapi.testclient import TestClient
 from app.main import app
 
-# Kita bikin 'klien palsu' untuk ngetes API tanpa perlu nyalain server beneran
+# Dummy test-client app
 client = TestClient(app)
 
-# Skenario 1: Cek halaman Home
+# Home
 def test_read_main():
     response = client.get("/")
     assert response.status_code == 200
@@ -14,7 +14,7 @@ def test_read_main():
         "version": "1.0.0"
     }
 
-# Skenario 2: Cek Rekomendasi yang ADA datanya (Kopi)
+# Check recommendation
 def test_recommend_kopi():
     response = client.get("/recommend/kopi")
     assert response.status_code == 200
@@ -23,7 +23,7 @@ def test_recommend_kopi():
     # Pastikan rekomendasinya mengandung GULA
     assert "GULA" in data["recommendations"]
 
-# Skenario 3: Cek Rekomendasi barang GAIB (Gak ada di data)
+# Unknown
 def test_recommend_unknown():
     response = client.get("/recommend/mobil_balap")
     assert response.status_code == 200
