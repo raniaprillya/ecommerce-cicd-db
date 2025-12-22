@@ -10,7 +10,7 @@ def test_read_main():
     assert response.status_code == 200
     assert response.json() == {
         "status": "online",
-        "message": "Retail Recommender API siap digunakan!",
+        "message": "Retail Recommender API ready to use!",
         "version": "1.0.0"
     }
 
@@ -29,4 +29,4 @@ def test_recommend_unknown():
     assert response.status_code == 200
     data = response.json()
     assert data["recommendations"] == []
-    assert data["note"] == "Produk ini belum ada di pola belanja kita."
+    assert data["note"] == "This product not found in our database."
